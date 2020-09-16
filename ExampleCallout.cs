@@ -119,7 +119,23 @@ namespace ExampleCallout
                 {
                     EndWithError();
                 }
-            
+                
+                 //Wait a little while and move to Code 4 once both suspects are arrested
+                 GameFiber.Wait(3000);
+                 if (Suspect1.IsArrested && Suspect2.IsArrested || Suspect1.IsDead && Suspect2.IsDead)
+                 {
+                    Code4();
+                 }
+                    //Move to Code 4 if the suspects escaped.
+                    else if (Game.LocalPlayer.Character.DistanceTo(Suspect1.position) > 100f && Game.LocalPlayer.Character.DistanceTo(Suspect2.position) > 100f)
+                    {
+                        Code4();
+                    }
+           
+                 else
+                 {
+                   UI.Notify("~y~ Move in ~w~ on the ~r~ suspects!");
+                 }
             }  
         }
         
@@ -161,17 +177,6 @@ namespace ExampleCallout
             NativeFunction.Natives.SET_PED_DROPS_WEAPON(Suspect2);
             Suspect2.Tasks.PutHandsUp(-1, Game.LocalPlayer.Character);
             StolenVan.Dismiss();
-
-            //Wait a little while and move to Code 4 once both suspects are arrested.
-            GameFiber.Wait(3000);
-            if (Suspect1.IsArrested && Suspect2.IsArrested)
-            {
-                Code4();
-            }
-            else
-            {
-                UI.Notify("~y~ Move in ~w~ on the ~r~ suspects!");
-            }
         }
 
         public void IsPlayerDead()
