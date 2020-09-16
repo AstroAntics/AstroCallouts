@@ -8,3 +8,9 @@ You are also more than welcome to submit pull requests and work on improving the
 
 All I ask is that you keep the GPL's license intact with your code wherever you publish it. 
 Do whatever you like with the code, as long as you carry the torch and pass the license on as well.
+
+## Required Dependencies
+To install AstroCallouts, you will need the following:
+* A legal, non-pirated copy of GTA V
+* LSPDFR 0.4 or higher
+* RagePluginHook
