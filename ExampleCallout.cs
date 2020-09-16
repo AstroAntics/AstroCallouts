@@ -106,35 +106,30 @@ namespace ExampleCallout
                     //Passive response (suspects surrender)
                     Surrender();
                 }
-            
-                //End the callout immediately if both suspects are dead.
-                if (Suspect1.IsDead && Suspect2.IsDead)
-                {
-                    Code4();
-                }
 
                 //End the callout immediately if the van or the suspects don't exist.
                 //This should never happen, which is why the EndWithError method exists.
                 if (!StolenVan.Exists() || !Suspect1.Exists() || !Suspect2.Exists())
                 {
                     EndWithError();
+                    break;
                 }
                 
-                 //Wait a little while and move to Code 4 once both suspects are arrested
-                 GameFiber.Wait(3000);
-                 if (Suspect1.IsArrested && Suspect2.IsArrested || Suspect1.IsDead && Suspect2.IsDead)
+                 //If both suspects are arrested or dead, the call ends.
+                 if ((Functions.IsPedArrested(Suspect1)) && (Functions.IsPedArrested(Suspect2)) || Suspect1.IsDead && Suspect2.IsDead)
+                 {
+                    Code4();
+                    break;
+                 }
+                    //Move to Code 4 if the suspects escaped.
+                 else if (Game.LocalPlayer.Character.DistanceTo(Suspect1.position) > 100f && Game.LocalPlayer.Character.DistanceTo(Suspect2.position) > 100f)
                  {
                     Code4();
                  }
-                    //Move to Code 4 if the suspects escaped.
-                    else if (Game.LocalPlayer.Character.DistanceTo(Suspect1.position) > 100f && Game.LocalPlayer.Character.DistanceTo(Suspect2.position) > 100f)
-                    {
-                        Code4();
-                    }
            
                  else
                  {
-                   UI.Notify("~y~ Move in ~w~ on the ~r~ suspects!");
+                    UI.Notify("~y~ Move in ~w~ on the ~r~ suspects!");
                  }
             }  
         }
@@ -193,7 +188,7 @@ namespace ExampleCallout
         public void Code4()
         {
             Functions.PlayScannerAudio("WE_ARE_CODE FOUR NO_FURTHER_UNITS_REQUIRED")
-            UI.Notify("The callout has been resolved. We are ~y~ Code 4. Good job, officer!");
+            Game.DisplayNotification("The callout has been resolved. We are ~y~ Code 4. ~w~ Good job, officer!");
             GameFiber.Wait(3000);
             End();
         }
