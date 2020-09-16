@@ -90,23 +90,26 @@ namespace ExampleCallout
             {
                 //Pick a random number between 1 and 2 to determine what the suspects are doing. Very simple!
                 Random SuspectBehavior = new Random(1,2);
-
-                if (SuspectBehavior == 1)
+                
+                if (Game.LocalPlayer.Character.DistanceTo(Suspect1.position) <= 10f) && (Game.LocalPlayer.Character.DistanceTo(Suspect2.position) <= 10f))
                 {
-                    //Aggressive response.
-                    if (Game.LocalPlayer.Character.DistanceTo(Suspect1.position) <= 10f) && (Game.LocalPlayer.Character.DistanceTo(Suspect2.position) <= 10f))
+                    switch (SuspectBehavior)
                     {
-                        StartShooting();
-                    }
-                }
-
-                else if (SuspectBehavior == 2)
-                {
-                    if (Game.LocalPlayer.Character.DistanceTo(Suspect1.position) <= 10f) && (Game.LocalPlayer.Character.DistanceTo(Suspect2.position) <= 10f))
-                    //Passive response (suspects surrender)
+                    //Aggressive response
+                    case 1:
+                    StartShooting();
+                    break;
+                    
+                    //Passive response
+                    case 2:
                     Surrender();
-                }
-
+                    break;
+                    
+                    default:
+                    break;
+                    }
+              }
+               
                 //End the callout immediately if the van or the suspects don't exist.
                 //This should never happen, which is why the EndWithError method exists.
                 if (!StolenVan.Exists() || !Suspect1.Exists() || !Suspect2.Exists())
